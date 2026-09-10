@@ -672,7 +672,33 @@ app.get("/api/feedback", async (req, res) => {
 // ============================================================
 // DIGITAL EVENT PASS
 // ============================================================
+app.get("/api/participants/email/:email", async (req, res) => {
+    try {
+        const { email } = req.params;
 
+        const participant = await Participant.findOne({ email });
+
+        if (!participant) {
+            return res.status(404).json({
+                success: false,
+                message: "Participant not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            participant
+        });
+
+    } catch (error) {
+        console.log("Participant Login Error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Participant login failed"
+        });
+    }
+});
 app.get("/api/participants/:participantId/pass", async (req, res) => {
     try {
         const { participantId } = req.params;
